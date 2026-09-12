@@ -2,8 +2,7 @@ POST http://localhost:5224/tasks
 Content-Type: application/json
 
 {
-  "title": "New task",
-  "description": "check 201",
-  "status": 1,
-  "deadline": "2027-03-01T00:00:00"
+  "title": "Past deadline",
+  "description": "test",
+  "deadline": "2020-01-01T00:00:00"
 }

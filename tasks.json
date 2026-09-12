@@ -1,10 +1,10 @@
 [
   {
-    "Id": 2,
-    "Title": "Updated title",
-    "Description": "changed",
+    "Id": 1,
+    "Title": "DTO check",
+    "Description": "should work",
     "Status": "Uncompleted",
-    "Deadline": "2027-01-15T00:00:00",
-    "CreationDate": "2026-09-05T15:30:32.8362222+03:00"
+    "Deadline": "2027-05-01T00:00:00",
+    "CreationDate": "2026-09-12T23:31:21.1722283+03:00"
   }
 ]

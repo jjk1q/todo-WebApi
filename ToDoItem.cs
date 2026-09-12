@@ -1,8 +1,7 @@
-using System.Diagnostics;
 using System.Text.Json.Serialization;
 
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum Status
+public enum ItemStatus
 {
     Completed,
     Uncompleted
@@ -32,7 +31,7 @@ public class ToDoItem
         }
     }
     public string Description{get;private set;}
-    public Status Status{get;private set;} = Status.Uncompleted;
+    public ItemStatus Status{get;private set;} = ItemStatus.Uncompleted;
     public DateTime Deadline{get;private set;}
     public DateTime CreationDate{get;private set;}
     [JsonIgnore]
@@ -62,7 +61,7 @@ public class ToDoItem
     }
     
     [JsonConstructor]
-    public ToDoItem(int id, string title, string description, Status status, DateTime deadline, DateTime creationDate)
+    public ToDoItem(int id, string title, string description, ItemStatus status, DateTime deadline, DateTime creationDate)
     {
         _id = id;
         _titel = title;
@@ -73,9 +72,9 @@ public class ToDoItem
     }
 
 
-    public void ChangeStatus(Status status)
+    public void ChangeStatus(ItemStatus status)
     {
-        Status newStatus = (Status)status;
+        ItemStatus newStatus = (ItemStatus)status;
         this.Status = newStatus;   
     }
 

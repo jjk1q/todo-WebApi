@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Microsoft.AspNetCore.Mvc;
 
 [Route("tasks")]
@@ -26,10 +27,12 @@ public class TasksController : ControllerBase
         return item;
     }
     [HttpPost]
-    public ActionResult<ToDoItem> Create([FromBody] ToDoItem item)
+    public ActionResult<TaskResponseDTO> Create([FromBody] CreateTaskDTO dto)
     {
+        var item = new ToDoItem(dto.Title, dto.Description, dto.Deadline);
         storage.Add(item);
-        return CreatedAtAction(nameof(GetById), new {id = item.Id}, item);
+        var taskResponse = new TaskResponseDTO{Id = item.Id, Title = item.Title, Deadline = item.Deadline, Description = item.Description, Status = item.Status, CreationDate = item.CreationDate, IsOverdue = item.IsOverdue};
+        return CreatedAtAction(nameof(GetById), new {id = item.Id}, taskResponse);
     }
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
