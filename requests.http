@@ -1,8 +1,1 @@
-POST http://localhost:5224/tasks
-Content-Type: application/json
-
-{
-  "title": "Past deadline",
-  "description": "test",
-  "deadline": "2020-01-01T00:00:00"
-}
+GET http://localhost:5224/tasks/1

@@ -9,7 +9,7 @@ public enum ItemStatus
 public class ToDoItem
 {
     private int _id;
-    private string _titel;
+    private string _title;
     public int Id
     {
         get => _id;
@@ -22,15 +22,15 @@ public class ToDoItem
     }
     public string Title
     {
-        get => _titel;
+        get => _title;
         private set
         {
             if(string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Tittle cannot be empty");
-            _titel = value;
+            _title = value;
         }
     }
-    public string Description{get;private set;}
+    public string? Description{get;private set;}
     public ItemStatus Status{get;private set;} = ItemStatus.Uncompleted;
     public DateTime Deadline{get;private set;}
     public DateTime CreationDate{get;private set;}
@@ -51,20 +51,18 @@ public class ToDoItem
 
     public ToDoItem(string title, string description, DateTime deadline)
     {
-        if(deadline < DateTime.Now)
-            throw new ArgumentException("Invalid deadline date");
-
-        _titel = title;
+        ValidateDeadLine(deadline);
+        _title = title;
         Description = description;
         Deadline = deadline;
         CreationDate = DateTime.Now;
     }
     
     [JsonConstructor]
-    public ToDoItem(int id, string title, string description, ItemStatus status, DateTime deadline, DateTime creationDate)
+    public ToDoItem(int id, string title, string? description, ItemStatus status, DateTime deadline, DateTime creationDate)
     {
         _id = id;
-        _titel = title;
+        _title = title;
         Description = description;
         Status = status;
         Deadline = deadline;
@@ -72,11 +70,7 @@ public class ToDoItem
     }
 
 
-    public void ChangeStatus(ItemStatus status)
-    {
-        ItemStatus newStatus = (ItemStatus)status;
-        this.Status = newStatus;   
-    }
+    
 
     public void AssignId(int id)
     {
@@ -85,12 +79,21 @@ public class ToDoItem
         Id = id;
     }
 
-    public void AssignData(ToDoItem item)
+    public void AssignData(UpdateTaskDTO dto)
     {
-        _titel = item.Title;
-        Description = item.Description;
-        Deadline = item.Deadline;
-        Status = item.Status;
+        ValidateDeadLine(dto.Deadline);
+        Title = dto.Title!;
+        Description = dto.Description;
+        Deadline = dto.Deadline;
+        Status = dto.Status;
+    }
+
+    private void ValidateDeadLine(DateTime deadline)
+    {
+        if(DateTime.Now >= deadline)
+        {
+            throw new ArgumentException("Invalid deadline date");
+        }
     }
 
 }

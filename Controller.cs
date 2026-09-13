@@ -1,4 +1,4 @@
-using System.ComponentModel;
+
 using Microsoft.AspNetCore.Mvc;
 
 [Route("tasks")]
@@ -11,27 +11,29 @@ public class TasksController : ControllerBase
         this.storage = storage;
     }
     [HttpGet]
-    public List<ToDoItem> GetAll()
+    public ActionResult<List<TaskResponseDTO>> GetAll()
     {
-        return storage.GetAll();
+        var tasks = storage.GetAll();
+        var response = tasks.Select(item => MapToResponse(item)).ToList();
+        return Ok(response);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<ToDoItem> GetById(int id)
+    public ActionResult<TaskResponseDTO> GetById(int id)
     {
         var item = storage.GetById(id);
         if(item == null)
         {
             return NotFound();
         }
-        return item;
+        return Ok(MapToResponse(item));
     }
     [HttpPost]
     public ActionResult<TaskResponseDTO> Create([FromBody] CreateTaskDTO dto)
     {
-        var item = new ToDoItem(dto.Title, dto.Description, dto.Deadline);
+        var item = new ToDoItem(dto.Title!, dto.Description, dto.Deadline);
         storage.Add(item);
-        var taskResponse = new TaskResponseDTO{Id = item.Id, Title = item.Title, Deadline = item.Deadline, Description = item.Description, Status = item.Status, CreationDate = item.CreationDate, IsOverdue = item.IsOverdue};
+        var taskResponse = MapToResponse(item);
         return CreatedAtAction(nameof(GetById), new {id = item.Id}, taskResponse);
     }
     [HttpDelete("{id}")]
@@ -46,15 +48,26 @@ public class TasksController : ControllerBase
         return NoContent();
     }
     [HttpPut("{id}")]
-    public IActionResult Update(int id, ToDoItem updated)
+    public IActionResult Update(int id, UpdateTaskDTO dto)
     {
         var item = storage.GetById(id);
         if(item == null)
         {
             return NotFound();
         }
-        item.AssignData(updated);
+
+        item.AssignData(dto);
         storage.Update(item);
         return NoContent();
+    }
+
+    private TaskResponseDTO MapToResponse(ToDoItem item)
+    {
+        return new TaskResponseDTO
+        {
+            Id = item.Id, Title = item.Title, Deadline = item.Deadline,
+            Description = item.Description, Status = item.Status,
+            CreationDate = item.CreationDate, IsOverdue = item.IsOverdue
+        };
     }
 }
