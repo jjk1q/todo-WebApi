@@ -1,1 +1,1 @@
-GET http://localhost:5224/tasks/1
+GET http://localhost:5224/tasks
