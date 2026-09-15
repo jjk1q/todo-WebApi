@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 public class EfToDoStorage : IStorage
 {
     private readonly AppDbContext context;
@@ -7,34 +9,34 @@ public class EfToDoStorage : IStorage
         this.context = context;
     }
 
-    public List<ToDoItem> GetAll()
+    public async Task<List<ToDoItem>> GetAllAsync()
     {
-        return context.Tasks.ToList();
+        return await context.Tasks.ToListAsync();
     }
 
-    public ToDoItem? GetById(int id)
+    public async Task<ToDoItem?> GetByIdAsync(int id)
     {
-        return context.Tasks.Find(id);
+        return await context.Tasks.FindAsync(id);
     }
 
-    public void Add(ToDoItem item)
+    public async Task AddAsync(ToDoItem item)
     {
-        context.Tasks.Add(item);
-        context.SaveChanges();
+        await context.Tasks.AddAsync(item);
+        await context.SaveChangesAsync();
     }
 
-    public void Delete(int id)
+    public async Task DeleteAsync(int id)
     {
-        var item = GetById(id);
+        var item = await GetByIdAsync(id);
         if(item == null) return;
         context.Tasks.Remove(item);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
-    public void Update(ToDoItem item)
+    public async Task UpdateAsync(ToDoItem item)
     {
         context.Tasks.Update(item);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
     }
 
 }

@@ -11,17 +11,17 @@ public class TasksController : ControllerBase
         this.storage = storage;
     }
     [HttpGet]
-    public ActionResult<List<TaskResponseDTO>> GetAll()
+    public async Task<ActionResult<List<TaskResponseDTO>>> GetAll()
     {
-        var tasks = storage.GetAll();
+        var tasks = await storage.GetAllAsync();
         var response = tasks.Select(item => MapToResponse(item)).ToList();
         return Ok(response);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<TaskResponseDTO> GetById(int id)
+    public async Task<ActionResult<TaskResponseDTO>> GetById(int id)
     {
-        var item = storage.GetById(id);
+        var item = await storage.GetByIdAsync(id);
         if(item == null)
         {
             return NotFound();
@@ -29,35 +29,35 @@ public class TasksController : ControllerBase
         return Ok(MapToResponse(item));
     }
     [HttpPost]
-    public ActionResult<TaskResponseDTO> Create([FromBody] CreateTaskDTO dto)
+    public async Task<ActionResult<TaskResponseDTO>> Create([FromBody] CreateTaskDTO dto)
     {
         var item = new ToDoItem(dto.Title!, dto.Description, dto.Deadline);
-        storage.Add(item);
+        await storage.AddAsync(item);
         var taskResponse = MapToResponse(item);
         return CreatedAtAction(nameof(GetById), new {id = item.Id}, taskResponse);
     }
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var item = storage.GetById(id);
+        var item = await storage.GetByIdAsync(id);
         if(item == null)
         {
             return NotFound();
         }
-        storage.Delete(id);
+        await storage.DeleteAsync(id);
         return NoContent();
     }
     [HttpPut("{id}")]
-    public IActionResult Update(int id, UpdateTaskDTO dto)
+    public async Task<IActionResult> Update(int id, UpdateTaskDTO dto)
     {
-        var item = storage.GetById(id);
+        var item = await storage.GetByIdAsync(id);
         if(item == null)
         {
             return NotFound();
         }
 
         item.AssignData(dto);
-        storage.Update(item);
+        await storage.UpdateAsync(item);
         return NoContent();
     }
 

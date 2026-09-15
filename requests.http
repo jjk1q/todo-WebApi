@@ -1,1 +1,8 @@
-GET http://localhost:5224/tasks
+POST http://localhost:5224/tasks
+Content-Type: application/json
+
+{
+  "title": "Прошлое",
+  "description": "должно упасть",
+  "deadline": "2020-01-01T00:00:00"
+}
