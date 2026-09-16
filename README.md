@@ -12,8 +12,6 @@ something I wrote and understand rather than something I copied.
 - [x] Stage 1 — Web API with a controller and full CRUD
 - [x] Stage 2 — DTOs and global error handling (ProblemDetails)
 - [x] Stage 3 — EF Core with SQLite
-- [ ] Stage 4 — Users
-- [ ] Stage 5 — JWT authentication
 
 ## Tech stack
 
